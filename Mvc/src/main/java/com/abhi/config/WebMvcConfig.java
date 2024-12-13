@@ -34,6 +34,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // Serve static resources
         registry.addResourceHandler("/resources/**")
                 .addResourceLocations("/resources/");
+        
+        registry.addResourceHandler("/Assets/**").addResourceLocations("/Assets/");
+        
+        //<img src="/Assets/abc.png">
+        
+        
+        
+        
     }
 
     @Override
