@@ -1,39 +1,45 @@
 package com.abhi.services;
 
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.stereotype.Service;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.abhi.model.Student;
 
-@Service
+@Repository
 public class StudentService {
 
-    private final Map<Integer, Student> studentMap = new HashMap<>();
-    private int currentId = 1;
+	@Autowired
+	private SessionFactory sessionFactory;
 
-    public List<Student> getAllStudents() {
-        return new ArrayList<>(studentMap.values());
-    }
+	public List<Student> getAllStudents() {
+		Session session = sessionFactory.getCurrentSession();
+		return session.createQuery("FROM Student", Student.class).getResultList();
+	}
 
-    public void addStudent(Student student) {
-        student.setId(currentId++);
-        studentMap.put(student.getId(), student);
-    }
+	public void addStudent(Student student) {
+		Session session = sessionFactory.getCurrentSession();
+		session.save(student);
+	}
 
-    public Student getStudentById(int id) {
-        return studentMap.get(id);
-    }
+	public Student getStudentById(int id) {
+		Session session = sessionFactory.getCurrentSession();
+		return session.get(Student.class, id);
+	}
 
-    public void updateStudent(Student student) {
-        studentMap.put(student.getId(), student);
-    }
+	public void updateStudent(Student student) {
+		Session session = sessionFactory.getCurrentSession();
+		session.update(student);
+	}
 
-    public void deleteStudent(int id) {
-        studentMap.remove(id);
-    }
+	public void deleteStudent(int id) {
+		Session session = sessionFactory.getCurrentSession();
+		Student student = session.get(Student.class, id);
+		if (student != null) {
+			session.delete(student);
+		}
+	}
 }
